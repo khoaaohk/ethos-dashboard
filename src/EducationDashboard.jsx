@@ -187,51 +187,7 @@ const CountUp = ({ value, duration = 1400 }) => {
   return <>{display}{suffix}</>;
 };
 
-export default function EducationDashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem('ethos-auth') === 'true');
-  const [authPassword, setAuthPassword] = useState('');
-  const [authError, setAuthError] = useState(false);
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-sm">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gray-900 flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-lg">E</span>
-              </div>
-              <h1 className="text-lg font-semibold text-gray-900">Ethos Dashboard</h1>
-              <p className="text-sm text-gray-500 mt-1">Enter password to continue</p>
-            </div>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              if (authPassword === 'rickroll') {
-                setIsAuthenticated(true);
-                sessionStorage.setItem('ethos-auth', 'true');
-                setAuthError(false);
-              } else {
-                setAuthError(true);
-              }
-            }}>
-              <input
-                type="password"
-                value={authPassword}
-                onChange={(e) => { setAuthPassword(e.target.value); setAuthError(false); }}
-                placeholder="Password"
-                autoFocus
-                className={`w-full px-4 py-3 text-sm border rounded-lg outline-none transition-colors ${authError ? 'border-red-300 bg-red-50' : 'border-gray-300 focus:border-gray-900'}`}
-              />
-              {authError && <p className="text-xs text-red-500 mt-2">Incorrect password</p>}
-              <button type="submit" className="w-full mt-4 px-4 py-3 text-sm font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors">
-                Continue
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  }
+export default function EducationDashboard({ initialFlow = 'returning' }) {
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -4087,7 +4043,7 @@ export default function EducationDashboard() {
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     className="flex-1 text-sm outline-none bg-transparent text-gray-900 placeholder-gray-400"
-                    onKeyDown={(e) => e.key === 'Enter' && handleLogin(false)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLogin(initialFlow === 'new')}
                   />
                 </div>
               </div>
@@ -4102,7 +4058,7 @@ export default function EducationDashboard() {
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     className="flex-1 text-sm outline-none bg-transparent text-gray-900 placeholder-gray-400"
-                    onKeyDown={(e) => e.key === 'Enter' && handleLogin(false)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLogin(initialFlow === 'new')}
                   />
                   <button onClick={() => setShowLoginPassword(!showLoginPassword)} className="text-gray-400 hover:text-gray-600 transition-colors">
                     {showLoginPassword ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
@@ -4123,7 +4079,7 @@ export default function EducationDashboard() {
 
               {/* Continue button */}
               <button
-                onClick={() => handleLogin(true)}
+                onClick={() => handleLogin(initialFlow === 'new')}
                 className="w-full py-3.5 text-sm font-semibold text-white bg-gray-900 rounded-md hover:bg-gray-800 transition-colors"
               >
                 Continue
@@ -4134,7 +4090,7 @@ export default function EducationDashboard() {
 
               {/* SSO button */}
               <button
-                onClick={() => handleLogin(false)}
+                onClick={() => handleLogin(initialFlow === 'new')}
                 className="w-full py-3.5 text-sm font-semibold text-gray-900 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
               >
                 Login With SSO
